@@ -27,12 +27,14 @@ export function YearTracker() {
   const startOfYear = new Date(selectedDate.getFullYear(), 0, 1);
   const todayStartOfYear = new Date(today.getFullYear(), 0, 1);
 
-  const selectedDayOfYear = Math.floor(
-    (selectedDate.getTime() - startOfYear.getTime()) / (1000 * 60 * 60 * 24),
-  );
-  const todayDayOfYear = Math.floor(
-    (today.getTime() - todayStartOfYear.getTime()) / (1000 * 60 * 60 * 24),
-  );
+  const selectedDayOfYear =
+    Math.floor(
+      (selectedDate.getTime() - startOfYear.getTime()) / (1000 * 60 * 60 * 24),
+    ) + 1;
+  const todayDayOfYear =
+    Math.floor(
+      (today.getTime() - todayStartOfYear.getTime()) / (1000 * 60 * 60 * 24),
+    ) + 1;
 
   const days = Array.from({ length: daysInYear }, (_, i) => i + 1);
 
