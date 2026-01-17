@@ -1,7 +1,7 @@
 import { ThemedText } from "@/components/themed-text";
 import { Colors } from "@/constants/theme";
 import { useColorScheme } from "@/hooks/use-color-scheme";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 export function YearTracker() {
   const colorScheme = useColorScheme();
@@ -29,6 +29,9 @@ export function YearTracker() {
     <View style={styles.container}>
       <View style={styles.headerContainer}>
         <ThemedText type="subtitle">{formattedDate}</ThemedText>
+        <Pressable style={styles.plusButton}>
+          <Text style={styles.plusText}>+</Text>
+        </Pressable>
       </View>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.gridContainer}>
@@ -69,7 +72,24 @@ const styles = StyleSheet.create({
   headerContainer: {
     paddingTop: 50,
     paddingHorizontal: 16,
-    paddingBottom: 16,
+    paddingBottom: 24,
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  plusButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 4,
+    backgroundColor: "#22C55E",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  plusText: {
+    color: "white",
+    fontSize: 28,
+    fontWeight: "bold",
   },
   scrollContent: {
     padding: 16,
