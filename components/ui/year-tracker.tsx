@@ -1,3 +1,4 @@
+import { ThemedText } from "@/components/themed-text";
 import { Colors } from "@/constants/theme";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { ScrollView, StyleSheet, View } from "react-native";
@@ -17,8 +18,18 @@ export function YearTracker() {
 
   const days = Array.from({ length: daysInYear }, (_, i) => i + 1);
 
+  const formattedDate = today.toLocaleDateString("en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
   return (
     <View style={styles.container}>
+      <View style={styles.headerContainer}>
+        <ThemedText type="subtitle">{formattedDate}</ThemedText>
+      </View>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.gridContainer}>
           {days.map((day) => {
@@ -55,8 +66,14 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
   },
+  headerContainer: {
+    paddingTop: 50,
+    paddingHorizontal: 16,
+    paddingBottom: 16,
+  },
   scrollContent: {
     padding: 16,
+    paddingTop: 0,
   },
   gridContainer: {
     flexDirection: "row",
