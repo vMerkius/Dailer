@@ -1,27 +1,22 @@
 import { ThemedText } from "@/components/themed-text";
-import { Colors } from "@/constants/theme";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useState } from "react";
-import {
-  Modal,
-  Platform,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  View,
-} from "react-native";
+import { Modal, Platform, Pressable, StyleSheet, View } from "react-native";
+import { DatePickerRow } from "./date-picker-row";
+import { Header } from "./header";
+import { YearGrid } from "./year-grid";
 
 export function YearTracker() {
   const [modalVisible, setModalVisible] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const colorScheme = useColorScheme();
+
   const daysInYear = 365;
   const squareSize = 12;
   const spacing = 6;
-  const squaresPerRow = 12;
 
   const today = new Date();
   const startOfYear = new Date(selectedDate.getFullYear(), 0, 1);
@@ -35,8 +30,6 @@ export function YearTracker() {
     Math.floor(
       (today.getTime() - todayStartOfYear.getTime()) / (1000 * 60 * 60 * 24),
     ) + 1;
-
-  const days = Array.from({ length: daysInYear }, (_, i) => i + 1);
 
   const formattedDate = selectedDate.toLocaleDateString("en-US", {
     weekday: "long",
@@ -100,67 +93,25 @@ export function YearTracker() {
           </View>
         </View>
       </Modal>
-      <View style={styles.headerContainer}>
-        <View style={styles.appNameSection}>
-          <ThemedText type="subtitle">Dailer</ThemedText>
-          <Pressable
-            style={styles.plusButton}
-            onPress={() => setModalVisible(true)}
-          >
-            <MaterialCommunityIcons name="plus" size={28} color="white" />
-          </Pressable>
-        </View>
-      </View>
-      <View style={styles.datePickerRow}>
-        <Pressable style={styles.arrowButton} onPress={handlePreviousDay}>
-          <MaterialCommunityIcons name="chevron-left" size={24} color="white" />
-        </Pressable>
-        <Pressable onPress={() => setShowDatePicker(true)}>
-          <ThemedText type="subtitle">{formattedDate}</ThemedText>
-        </Pressable>
-        <Pressable style={styles.arrowButton} onPress={handleNextDay}>
-          <MaterialCommunityIcons
-            name="chevron-right"
-            size={24}
-            color="white"
-          />
-        </Pressable>
-      </View>
+      <Header onPlusPress={() => setModalVisible(true)} />
+      <DatePickerRow
+        formattedDate={formattedDate}
+        onPreviousDay={handlePreviousDay}
+        onNextDay={handleNextDay}
+        onDatePress={() => setShowDatePicker(true)}
+      />
       <View style={styles.todayDateContainer}>
         <Pressable onPress={() => setShowDatePicker(true)}>
           <ThemedText type="default">Today</ThemedText>
         </Pressable>
       </View>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <View style={styles.gridContainer}>
-          {days.map((day) => {
-            const isBeforeToday = day < todayDayOfYear;
-            const isCurrentDay = day === selectedDayOfYear;
-
-            return (
-              <View
-                key={day}
-                style={[
-                  styles.square,
-                  {
-                    width: squareSize,
-                    height: squareSize,
-                    margin: spacing,
-                    backgroundColor: isCurrentDay
-                      ? "#3B82F6"
-                      : isBeforeToday
-                        ? "#EF4444"
-                        : colorScheme === "dark"
-                          ? Colors.dark.tabIconSelected
-                          : Colors.light.tabIconSelected,
-                    borderRadius: 2,
-                  },
-                ]}
-              />
-            );
-          })}
-        </View>
-      </ScrollView>
+      <YearGrid
+        daysInYear={daysInYear}
+        squareSize={squareSize}
+        spacing={spacing}
+        selectedDayOfYear={selectedDayOfYear}
+        todayDayOfYear={todayDayOfYear}
+      />
     </View>
   );
 }
@@ -170,62 +121,10 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
   },
-  headerContainer: {
-    paddingTop: 50,
-    paddingHorizontal: 16,
-    paddingBottom: 12,
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  datePickerRow: {
-    paddingHorizontal: 16,
-    paddingBottom: 16,
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 16,
-  },
-  plusButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 4,
-    backgroundColor: "#22C55E",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  arrowButton: {
-    padding: 8,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  appNameSection: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    width: "100%",
-    gap: 12,
-  },
   todayDateContainer: {
     paddingHorizontal: 16,
     paddingBottom: 16,
     alignItems: "center",
-  },
-  scrollContent: {
-    padding: 16,
-    paddingTop: 0,
-  },
-  gridContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
-  },
-  square: {
-    opacity: 0.8,
   },
   centeredView: {
     flex: 1,
