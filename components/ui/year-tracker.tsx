@@ -1,7 +1,8 @@
 import { ThemedText } from "@/components/themed-text";
 import { Colors } from "@/constants/theme";
 import { useColorScheme } from "@/hooks/use-color-scheme";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 
 export function YearTracker() {
   const colorScheme = useColorScheme();
@@ -30,7 +31,7 @@ export function YearTracker() {
       <View style={styles.headerContainer}>
         <ThemedText type="subtitle">{formattedDate}</ThemedText>
         <Pressable style={styles.plusButton}>
-          <Text style={styles.plusText}>+</Text>
+          <MaterialCommunityIcons name="plus" size={32} color="white" />
         </Pressable>
       </View>
       <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -85,11 +86,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#22C55E",
     justifyContent: "center",
     alignItems: "center",
-  },
-  plusText: {
-    color: "white",
-    fontSize: 28,
-    fontWeight: "bold",
   },
   scrollContent: {
     padding: 16,
