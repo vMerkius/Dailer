@@ -2,9 +2,11 @@ import { ThemedText } from "@/components/themed-text";
 import { Colors } from "@/constants/theme";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Pressable, ScrollView, StyleSheet, View } from "react-native";
+import { useState } from "react";
+import { Modal, Pressable, ScrollView, StyleSheet, View } from "react-native";
 
 export function YearTracker() {
+  const [modalVisible, setModalVisible] = useState(false);
   const colorScheme = useColorScheme();
   const daysInYear = 365;
   const squareSize = 12;
@@ -28,9 +30,36 @@ export function YearTracker() {
 
   return (
     <View style={styles.container}>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.centeredView}>
+          <View
+            style={[
+              styles.modalView,
+              {
+                backgroundColor: colorScheme === "dark" ? "#1a1a1a" : "#f5f5f5",
+              },
+            ]}
+          >
+            <Pressable
+              style={styles.closeButton}
+              onPress={() => setModalVisible(false)}
+            >
+              <MaterialCommunityIcons name="close" size={24} color="white" />
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
       <View style={styles.headerContainer}>
         <ThemedText type="subtitle">{formattedDate}</ThemedText>
-        <Pressable style={styles.plusButton}>
+        <Pressable
+          style={styles.plusButton}
+          onPress={() => setModalVisible(true)}
+        >
           <MaterialCommunityIcons name="plus" size={32} color="white" />
         </Pressable>
       </View>
@@ -99,5 +128,23 @@ const styles = StyleSheet.create({
   },
   square: {
     opacity: 0.8,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "flex-end",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalView: {
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 40,
+    minHeight: "60%",
+    maxHeight: "80%",
+  },
+  closeButton: {
+    alignSelf: "flex-end",
+    padding: 10,
   },
 });
