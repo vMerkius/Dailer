@@ -1,15 +1,16 @@
 import { ThemedText } from "@/components/themed-text";
 import { useColorScheme } from "@/hooks/use-color-scheme";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useState } from "react";
-import { Modal, Platform, Pressable, StyleSheet, View } from "react-native";
+import { Platform, Pressable, StyleSheet, View } from "react-native";
+import { ReviewDayModal, UserProfileModal } from "../modals";
 import { DatePickerRow } from "./date-picker-row";
 import { Header } from "./header";
 import { YearGrid } from "./year-grid";
 
 export function YearTracker() {
-  const [modalVisible, setModalVisible] = useState(false);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [isUserProfileModalOpen, setIsUserProfileModalOpen] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const colorScheme = useColorScheme();
@@ -69,31 +70,18 @@ export function YearTracker() {
           onChange={handleDateChange}
         />
       )}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={styles.centeredView}>
-          <View
-            style={[
-              styles.modalView,
-              {
-                backgroundColor: colorScheme === "dark" ? "#1a1a1a" : "#f5f5f5",
-              },
-            ]}
-          >
-            <Pressable
-              style={styles.closeButton}
-              onPress={() => setModalVisible(false)}
-            >
-              <MaterialCommunityIcons name="close" size={24} color="white" />
-            </Pressable>
-          </View>
-        </View>
-      </Modal>
-      <Header onPlusPress={() => setModalVisible(true)} />
+      <ReviewDayModal
+        isOpen={isReviewModalOpen}
+        onClose={() => setIsReviewModalOpen(false)}
+      />
+      <UserProfileModal
+        isOpen={isUserProfileModalOpen}
+        onClose={() => setIsUserProfileModalOpen(false)}
+      />
+      <Header
+        onPlusPress={() => setIsReviewModalOpen(true)}
+        onUserPress={() => setIsUserProfileModalOpen(true)}
+      />
       <DatePickerRow
         formattedDate={formattedDate}
         onPreviousDay={handlePreviousDay}
@@ -125,23 +113,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 16,
     alignItems: "center",
-  },
-  centeredView: {
-    flex: 1,
-    justifyContent: "flex-end",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-  },
-  modalView: {
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    paddingHorizontal: 20,
-    paddingTop: 20,
-    paddingBottom: 40,
-    minHeight: "60%",
-    maxHeight: "80%",
-  },
-  closeButton: {
-    alignSelf: "flex-end",
-    padding: 10,
   },
 });
