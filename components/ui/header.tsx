@@ -4,12 +4,18 @@ import { Pressable, StyleSheet, View } from "react-native";
 
 interface HeaderProps {
   onPlusPress: () => void;
+  onUserPress: () => void;
 }
 
-export function Header({ onPlusPress }: HeaderProps) {
+export function Header({ onPlusPress, onUserPress }: HeaderProps) {
   return (
     <View style={styles.container}>
-      <ThemedText type="subtitle">Dailer</ThemedText>
+      <View style={styles.logoContainer}>
+        <Pressable onPress={onUserPress}>
+          <MaterialCommunityIcons name="account" size={28} color="white" />
+        </Pressable>
+        <ThemedText type="subtitle">Dailer</ThemedText>
+      </View>
       <Pressable style={styles.plusButton} onPress={onPlusPress}>
         <MaterialCommunityIcons name="plus" size={28} color="white" />
       </Pressable>
@@ -27,6 +33,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     width: "100%",
+  },
+  logoContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
   },
   plusButton: {
     width: 40,
