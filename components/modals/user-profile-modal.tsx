@@ -1,14 +1,19 @@
-import { ThemedText } from "@/components/themed-text";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Modal, Pressable, StyleSheet, View } from "react-native";
+import { Modal, Pressable, ScrollView, StyleSheet, View } from "react-native";
+import { LoginForm, RegistrationForm } from "../forms";
 
 interface UserProfileModalProps {
   isOpen: boolean;
   onClose: () => void;
+  showRegistration?: boolean;
 }
 
-export function UserProfileModal({ isOpen, onClose }: UserProfileModalProps) {
+export function UserProfileModal({
+  showRegistration = true,
+  isOpen,
+  onClose,
+}: UserProfileModalProps) {
   const colorScheme = useColorScheme();
 
   return (
@@ -18,7 +23,7 @@ export function UserProfileModal({ isOpen, onClose }: UserProfileModalProps) {
       visible={isOpen}
       onRequestClose={onClose}
     >
-      <Pressable style={styles.centeredView} onPress={onClose}>
+      <Pressable style={styles.centeredView} onPress={() => {}}>
         <View
           style={[
             styles.modalView,
@@ -30,7 +35,26 @@ export function UserProfileModal({ isOpen, onClose }: UserProfileModalProps) {
           <Pressable style={styles.closeButton} onPress={onClose}>
             <MaterialCommunityIcons name="close" size={24} color="white" />
           </Pressable>
-          <ThemedText type="subtitle">User Profile</ThemedText>
+          <ScrollView
+            style={styles.formScroll}
+            showsVerticalScrollIndicator={false}
+          >
+            {showRegistration ? (
+              <RegistrationForm
+                onSubmit={(data) => {
+                  console.log("Registration data:", data);
+                  onClose();
+                }}
+              />
+            ) : (
+              <LoginForm
+                onSubmit={(data) => {
+                  console.log("Login data:", data);
+                  onClose();
+                }}
+              />
+            )}
+          </ScrollView>
         </View>
       </Pressable>
     </Modal>
@@ -49,11 +73,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 20,
     paddingBottom: 40,
-    minHeight: "60%",
-    maxHeight: "80%",
+    minHeight: "100%",
+    maxHeight: "100%",
   },
   closeButton: {
     alignSelf: "flex-end",
     padding: 10,
+  },
+  formScroll: {
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
   },
 });
