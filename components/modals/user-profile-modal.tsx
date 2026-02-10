@@ -1,20 +1,22 @@
-import { useColorScheme } from "@/hooks/use-color-scheme";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useState } from "react";
 import { Modal, Pressable, ScrollView, StyleSheet, View } from "react-native";
+
+import { useColorScheme } from "@/hooks/use-color-scheme";
 import { LoginForm, RegistrationForm } from "../forms";
 
 interface UserProfileModalProps {
   isOpen: boolean;
   onClose: () => void;
-  showRegistration?: boolean;
 }
 
-export function UserProfileModal({
-  showRegistration = true,
-  isOpen,
-  onClose,
-}: UserProfileModalProps) {
+export function UserProfileModal({ isOpen, onClose }: UserProfileModalProps) {
   const colorScheme = useColorScheme();
+  const [showRegistration, setShowRegistration] = useState(false);
+
+  const toggleForm = () => {
+    setShowRegistration((prev) => !prev);
+  };
 
   return (
     <Modal
@@ -45,6 +47,7 @@ export function UserProfileModal({
                   console.log("Registration data:", data);
                   onClose();
                 }}
+                onToggleForm={toggleForm}
               />
             ) : (
               <LoginForm
@@ -52,6 +55,7 @@ export function UserProfileModal({
                   console.log("Login data:", data);
                   onClose();
                 }}
+                onToggleForm={toggleForm}
               />
             )}
           </ScrollView>
