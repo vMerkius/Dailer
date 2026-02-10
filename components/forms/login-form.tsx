@@ -14,9 +14,14 @@ import { LoginFormData, loginSchema } from "./schemas";
 interface LoginFormProps {
   onSubmit: (data: LoginFormData) => void;
   isLoading?: boolean;
+  onToggleForm: () => void;
 }
 
-export function LoginForm({ onSubmit, isLoading }: LoginFormProps) {
+export function LoginForm({
+  onSubmit,
+  isLoading,
+  onToggleForm,
+}: LoginFormProps) {
   const colorScheme = useColorScheme();
   const {
     control,
@@ -109,6 +114,18 @@ export function LoginForm({ onSubmit, isLoading }: LoginFormProps) {
             color="#22C55E"
             disabled={isLoading}
           />
+        </View>
+
+        <View style={{ marginTop: 20, alignItems: "center" }}>
+          <Text
+            style={[
+              styles.label,
+              { color: colorScheme === "dark" ? "#fff" : "#000" },
+            ]}
+          >
+            Dont have an account?
+          </Text>
+          <Button title="Register" onPress={onToggleForm} color="#3B82F6" />
         </View>
       </View>
     </ScrollView>
