@@ -14,11 +14,13 @@ import { RegistrationFormData, registrationSchema } from "./schemas";
 interface RegistrationFormProps {
   onSubmit: (data: RegistrationFormData) => void;
   isLoading?: boolean;
+  onToggleForm: () => void;
 }
 
 export function RegistrationForm({
   onSubmit,
   isLoading,
+  onToggleForm,
 }: RegistrationFormProps) {
   const colorScheme = useColorScheme();
   const {
@@ -147,6 +149,18 @@ export function RegistrationForm({
             color="#22C55E"
             disabled={isLoading}
           />
+        </View>
+
+        <View style={{ marginTop: 20, alignItems: "center" }}>
+          <Text
+            style={[
+              styles.label,
+              { color: colorScheme === "dark" ? "#fff" : "#000" },
+            ]}
+          >
+            Already have an account?
+          </Text>
+          <Button title="Login" onPress={onToggleForm} color="#3B82F6" />
         </View>
       </View>
     </ScrollView>
