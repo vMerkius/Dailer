@@ -42,9 +42,9 @@ export function UserProfileModal({ isOpen, onClose }: UserProfileModalProps) {
             showsVerticalScrollIndicator={false}
           >
             {showRegistration ? (
-              <RegistrationForm onToggleForm={toggleForm} />
+              <RegistrationForm onToggleForm={toggleForm} onClose={onClose} />
             ) : (
-              <LoginForm onToggleForm={toggleForm} />
+              <LoginForm onToggleForm={toggleForm} onClose={onClose} />
             )}
           </ScrollView>
         </View>

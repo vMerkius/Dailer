@@ -14,10 +14,15 @@ import { LoginFormData, loginSchema } from "./schemas";
 
 interface LoginFormProps {
   isLoading?: boolean;
+  onClose: () => void;
   onToggleForm: () => void;
 }
 
-export function LoginForm({ isLoading, onToggleForm }: LoginFormProps) {
+export function LoginForm({
+  isLoading,
+  onClose,
+  onToggleForm,
+}: LoginFormProps) {
   const colorScheme = useColorScheme();
   const {
     control,
@@ -30,6 +35,11 @@ export function LoginForm({ isLoading, onToggleForm }: LoginFormProps) {
   });
 
   const password = watch("password");
+
+  const onSubmit = (data: LoginFormData) => {
+    console.log("Login data:", data);
+    onClose();
+  };
 
   return (
     <ScrollView

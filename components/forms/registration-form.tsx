@@ -14,11 +14,13 @@ import { RegistrationFormData, registrationSchema } from "./schemas";
 
 interface RegistrationFormProps {
   isLoading?: boolean;
+  onClose: () => void;
   onToggleForm: () => void;
 }
 
 export function RegistrationForm({
   isLoading,
+  onClose,
   onToggleForm,
 }: RegistrationFormProps) {
   const colorScheme = useColorScheme();
@@ -33,6 +35,11 @@ export function RegistrationForm({
   });
 
   const password = watch("password");
+
+  const onSubmit = (data: RegistrationFormData) => {
+    console.log("Registration data:", data);
+    onClose();
+  };
 
   return (
     <ScrollView
