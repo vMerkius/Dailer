@@ -3,6 +3,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Controller, useForm } from "react-hook-form";
 import {
   Button,
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -36,7 +37,10 @@ export function LoginForm({
   const password = watch("password");
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.contentContainer}
+    >
       <View style={styles.formContainer}>
         <View style={styles.fieldContainer}>
           <Text
@@ -117,15 +121,16 @@ export function LoginForm({
         </View>
 
         <View style={{ marginTop: 20, alignItems: "center" }}>
-          <Text
-            style={[
-              styles.label,
-              { color: colorScheme === "dark" ? "#fff" : "#000" },
-            ]}
-          >
-            Dont have an account?
-          </Text>
-          <Button title="Register" onPress={onToggleForm} color="#3B82F6" />
+          <Pressable onPress={onToggleForm}>
+            <Text
+              style={[
+                styles.link,
+                { color: colorScheme === "dark" ? "#fff" : "#000" },
+              ]}
+            >
+              Don&apos;t have an account?
+            </Text>
+          </Pressable>
         </View>
       </View>
     </ScrollView>
@@ -135,10 +140,17 @@ export function LoginForm({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    height: "100%",
+  },
+  contentContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 50,
   },
   formContainer: {
     padding: 20,
     paddingTop: 40,
+    width: "100%",
   },
   fieldContainer: {
     marginBottom: 20,
@@ -162,5 +174,11 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginTop: 30,
+  },
+  link: {
+    textDecorationLine: "underline",
+    fontSize: 16,
+    fontWeight: "600",
+    marginTop: 2,
   },
 });
