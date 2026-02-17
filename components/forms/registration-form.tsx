@@ -1,3 +1,4 @@
+import { registerUser } from "@/api";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Controller, useForm } from "react-hook-form";
@@ -36,7 +37,9 @@ export function RegistrationForm({
 
   const password = watch("password");
 
-  const onSubmit = (data: RegistrationFormData) => {
+  const onSubmit = async (data: RegistrationFormData) => {
+    const response = await registerUser(data);
+    console.log(response);
     console.log("Registration data:", data);
     onClose();
   };
