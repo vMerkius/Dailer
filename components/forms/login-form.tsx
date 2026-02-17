@@ -1,3 +1,4 @@
+import { loginUser } from "@/api";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Controller, useForm } from "react-hook-form";
@@ -36,8 +37,9 @@ export function LoginForm({
 
   const password = watch("password");
 
-  const onSubmit = (data: LoginFormData) => {
-    console.log("Login data:", data);
+  const onSubmit = async (data: LoginFormData) => {
+    const response = await loginUser(data);
+    console.log(response);
     onClose();
   };
 
