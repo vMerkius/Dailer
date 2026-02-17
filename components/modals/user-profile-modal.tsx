@@ -42,21 +42,9 @@ export function UserProfileModal({ isOpen, onClose }: UserProfileModalProps) {
             showsVerticalScrollIndicator={false}
           >
             {showRegistration ? (
-              <RegistrationForm
-                onSubmit={(data) => {
-                  console.log("Registration data:", data);
-                  onClose();
-                }}
-                onToggleForm={toggleForm}
-              />
+              <RegistrationForm onToggleForm={toggleForm} />
             ) : (
-              <LoginForm
-                onSubmit={(data) => {
-                  console.log("Login data:", data);
-                  onClose();
-                }}
-                onToggleForm={toggleForm}
-              />
+              <LoginForm onToggleForm={toggleForm} />
             )}
           </ScrollView>
         </View>

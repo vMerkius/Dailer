@@ -13,13 +13,11 @@ import {
 import { RegistrationFormData, registrationSchema } from "./schemas";
 
 interface RegistrationFormProps {
-  onSubmit: (data: RegistrationFormData) => void;
   isLoading?: boolean;
   onToggleForm: () => void;
 }
 
 export function RegistrationForm({
-  onSubmit,
   isLoading,
   onToggleForm,
 }: RegistrationFormProps) {

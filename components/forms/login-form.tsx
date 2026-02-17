@@ -13,16 +13,11 @@ import {
 import { LoginFormData, loginSchema } from "./schemas";
 
 interface LoginFormProps {
-  onSubmit: (data: LoginFormData) => void;
   isLoading?: boolean;
   onToggleForm: () => void;
 }
 
-export function LoginForm({
-  onSubmit,
-  isLoading,
-  onToggleForm,
-}: LoginFormProps) {
+export function LoginForm({ isLoading, onToggleForm }: LoginFormProps) {
   const colorScheme = useColorScheme();
   const {
     control,
