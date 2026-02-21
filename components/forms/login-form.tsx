@@ -1,6 +1,8 @@
 import { loginUser } from "@/api";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useMutation } from "@tanstack/react-query";
+import { isAxiosError } from "axios";
 import { Controller, useForm } from "react-hook-form";
 import {
   Button,
@@ -14,33 +16,39 @@ import {
 import { LoginFormData, loginSchema } from "./schemas";
 
 interface LoginFormProps {
-  isLoading?: boolean;
   onClose: () => void;
   onToggleForm: () => void;
 }
 
-export function LoginForm({
-  isLoading,
-  onClose,
-  onToggleForm,
-}: LoginFormProps) {
+function getErrorMessage(error: unknown): string {
+  if (isAxiosError(error) && error.response?.data?.message) {
+    return String(error.response.data.message);
+  }
+  if (error instanceof Error) return error.message;
+  return "Something went wrong. Try again.";
+}
+
+export function LoginForm({ onClose, onToggleForm }: LoginFormProps) {
   const colorScheme = useColorScheme();
   const {
     control,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<LoginFormData>({
     resolver: yupResolver(loginSchema),
     mode: "onBlur",
   });
 
-  const password = watch("password");
+  const loginMutation = useMutation({
+    mutationFn: loginUser,
+    onSuccess: () => {
+      console.log("Login successful");
+      console.log(loginMutation.data); 
+      onClose()},
+  });
 
-  const onSubmit = async (data: LoginFormData) => {
-    const response = await loginUser(data);
-    console.log(response);
-    onClose();
+  const onSubmit = (data: LoginFormData) => {
+    loginMutation.mutate(data);
   };
 
   return (
@@ -118,12 +126,20 @@ export function LoginForm({
           )}
         </View>
 
+        {loginMutation.isError && (
+          <View style={styles.apiErrorContainer}>
+            <Text style={styles.error}>
+              {getErrorMessage(loginMutation.error)}
+            </Text>
+          </View>
+        )}
+
         <View style={styles.buttonContainer}>
           <Button
-            title={isLoading ? "Logging in..." : "Login"}
+            title={loginMutation.isPending ? "Logging in..." : "Login"}
             onPress={handleSubmit(onSubmit)}
             color="#22C55E"
-            disabled={isLoading}
+            disabled={loginMutation.isPending}
           />
         </View>
 
@@ -177,6 +193,9 @@ const styles = StyleSheet.create({
     color: "#ef4444",
     fontSize: 12,
     marginTop: 6,
+  },
+  apiErrorContainer: {
+    marginBottom: 12,
   },
   buttonContainer: {
     marginTop: 30,
