@@ -4,6 +4,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
 import { Controller, useForm } from "react-hook-form";
+import { useState } from "react";
 import {
   Button,
   Pressable,
@@ -13,6 +14,7 @@ import {
   TextInput,
   View,
 } from "react-native";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { RegistrationFormData, registrationSchema } from "./schemas";
 
 interface RegistrationFormProps {
@@ -30,6 +32,8 @@ function getErrorMessage(error: unknown): string {
 
 export function RegistrationForm({ onClose, onToggleForm }: RegistrationFormProps) {
   const colorScheme = useColorScheme();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const {
     control,
     handleSubmit,
@@ -97,27 +101,41 @@ export function RegistrationForm({ onClose, onToggleForm }: RegistrationFormProp
           >
             Password
           </Text>
-          <Controller
-            control={control}
-            name="password"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                style={[
-                  styles.input,
-                  {
-                    color: colorScheme === "dark" ? "#fff" : "#000",
-                    borderColor: errors.password ? "#ef4444" : "#ccc",
-                  },
-                ]}
-                placeholder="Enter password"
-                placeholderTextColor={colorScheme === "dark" ? "#999" : "#ccc"}
-                onChangeText={onChange}
-                onBlur={onBlur}
-                value={value}
-                secureTextEntry
+          <View style={styles.passwordRow}>
+            <Controller
+              control={control}
+              name="password"
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  style={[
+                    styles.input,
+                    styles.passwordInput,
+                    {
+                      color: colorScheme === "dark" ? "#fff" : "#000",
+                      borderColor: errors.password ? "#ef4444" : "#ccc",
+                    },
+                  ]}
+                  placeholder="Enter password"
+                  placeholderTextColor={colorScheme === "dark" ? "#999" : "#ccc"}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  value={value}
+                  secureTextEntry={!showPassword}
+                />
+              )}
+            />
+            <Pressable
+              style={styles.eyeButton}
+              onPress={() => setShowPassword((prev) => !prev)}
+              hitSlop={8}
+            >
+              <MaterialIcons
+                name={showPassword ? "visibility-off" : "visibility"}
+                size={24}
+                color={colorScheme === "dark" ? "#9BA1A6" : "#687076"}
               />
-            )}
-          />
+            </Pressable>
+          </View>
           {errors.password && (
             <Text style={styles.error}>{errors.password.message}</Text>
           )}
@@ -132,27 +150,41 @@ export function RegistrationForm({ onClose, onToggleForm }: RegistrationFormProp
           >
             Confirm Password
           </Text>
-          <Controller
-            control={control}
-            name="confirmPassword"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                style={[
-                  styles.input,
-                  {
-                    color: colorScheme === "dark" ? "#fff" : "#000",
-                    borderColor: errors.confirmPassword ? "#ef4444" : "#ccc",
-                  },
-                ]}
-                placeholder="Confirm password"
-                placeholderTextColor={colorScheme === "dark" ? "#999" : "#ccc"}
-                onChangeText={onChange}
-                onBlur={onBlur}
-                value={value}
-                secureTextEntry
+          <View style={styles.passwordRow}>
+            <Controller
+              control={control}
+              name="confirmPassword"
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  style={[
+                    styles.input,
+                    styles.passwordInput,
+                    {
+                      color: colorScheme === "dark" ? "#fff" : "#000",
+                      borderColor: errors.confirmPassword ? "#ef4444" : "#ccc",
+                    },
+                  ]}
+                  placeholder="Confirm password"
+                  placeholderTextColor={colorScheme === "dark" ? "#999" : "#ccc"}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  value={value}
+                  secureTextEntry={!showConfirmPassword}
+                />
+              )}
+            />
+            <Pressable
+              style={styles.eyeButton}
+              onPress={() => setShowConfirmPassword((prev) => !prev)}
+              hitSlop={8}
+            >
+              <MaterialIcons
+                name={showConfirmPassword ? "visibility-off" : "visibility"}
+                size={24}
+                color={colorScheme === "dark" ? "#9BA1A6" : "#687076"}
               />
-            )}
-          />
+            </Pressable>
+          </View>
           {errors.confirmPassword && (
             <Text style={styles.error}>{errors.confirmPassword.message}</Text>
           )}
@@ -220,6 +252,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 12,
     fontSize: 16,
+  },
+  passwordRow: {
+    position: "relative",
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  passwordInput: {
+    flex: 1,
+    paddingRight: 48,
+  },
+  eyeButton: {
+    position: "absolute",
+    right: 12,
+    padding: 4,
   },
   error: {
     color: "#ef4444",
