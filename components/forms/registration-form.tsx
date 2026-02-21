@@ -1,6 +1,8 @@
 import { registerUser } from "@/api";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useMutation } from "@tanstack/react-query";
+import { isAxiosError } from "axios";
 import { Controller, useForm } from "react-hook-form";
 import {
   Button,
@@ -14,34 +16,36 @@ import {
 import { RegistrationFormData, registrationSchema } from "./schemas";
 
 interface RegistrationFormProps {
-  isLoading?: boolean;
   onClose: () => void;
   onToggleForm: () => void;
 }
 
-export function RegistrationForm({
-  isLoading,
-  onClose,
-  onToggleForm,
-}: RegistrationFormProps) {
+function getErrorMessage(error: unknown): string {
+  if (isAxiosError(error) && error.response?.data?.message) {
+    return String(error.response.data.message);
+  }
+  if (error instanceof Error) return error.message;
+  return "Something went wrong. Try again.";
+}
+
+export function RegistrationForm({ onClose, onToggleForm }: RegistrationFormProps) {
   const colorScheme = useColorScheme();
   const {
     control,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<RegistrationFormData>({
     resolver: yupResolver(registrationSchema),
     mode: "onBlur",
   });
 
-  const password = watch("password");
+  const registerMutation = useMutation({
+    mutationFn: registerUser,
+    onSuccess: () => onClose(),
+  });
 
-  const onSubmit = async (data: RegistrationFormData) => {
-    const response = await registerUser(data);
-    console.log(response);
-    console.log("Registration data:", data);
-    onClose();
+  const onSubmit = (data: RegistrationFormData) => {
+    registerMutation.mutate(data);
   };
 
   return (
@@ -154,12 +158,20 @@ export function RegistrationForm({
           )}
         </View>
 
+        {registerMutation.isError && (
+          <View style={styles.apiErrorContainer}>
+            <Text style={styles.error}>
+              {getErrorMessage(registerMutation.error)}
+            </Text>
+          </View>
+        )}
+
         <View style={styles.buttonContainer}>
           <Button
-            title={isLoading ? "Creating Account..." : "Register"}
+            title={registerMutation.isPending ? "Creating Account..." : "Register"}
             onPress={handleSubmit(onSubmit)}
             color="#22C55E"
-            disabled={isLoading}
+            disabled={registerMutation.isPending}
           />
         </View>
 
@@ -213,6 +225,9 @@ const styles = StyleSheet.create({
     color: "#ef4444",
     fontSize: 12,
     marginTop: 6,
+  },
+  apiErrorContainer: {
+    marginBottom: 12,
   },
   buttonContainer: {
     marginTop: 30,
